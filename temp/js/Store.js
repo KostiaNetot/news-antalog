@@ -24,5 +24,4 @@ class Store {
     });
     localStorage.setItem('allNews', JSON.stringify(allNews));
   }
-
 }

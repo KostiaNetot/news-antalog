@@ -1,3 +1,13 @@
-<div class="view center">
-  <h2>News List Page</h2>
+<div class="view news-list-view">
+  <div class="d-flex w-100 justify-content-between">
+    <h5 class="mb-1">${news.title}</h5>
+    <small class="text-muted">${news.date}</small>
+  </div>
+  <p class="mb-1 text-truncate">${news.text}</p>
+  <div class="d-flex w-100 justify-content-between">
+    <small class="text-muted">${news.reporter}</small>
+    <a href="#" class="btn btn-danger btn-sm delete">delete</a>
+  </div>
 </div>
+
+
