@@ -2,6 +2,6 @@ textarea {
   resize: none;
 }
 
-a.list-group-item .list-group-item-action .mb-2 {
-  cursor: pointer;
+.form-group {
+  margin-bottom: 0.4rem;
 }
