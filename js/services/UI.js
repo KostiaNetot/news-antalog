@@ -40,7 +40,6 @@ class UI {
   }
 
   static addContentToAuthPage(isAuth, parent) {
-    console.log(Storage.isAuthorized());
     if (!isAuth) {
       const authForm = this.createElement({
         tagName: 'form',
