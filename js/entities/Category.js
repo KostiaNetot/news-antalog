@@ -11,9 +11,5 @@ class Category {
     this.newsList = this.newsList.concat(arr);
   }
 
-  getName() {
-    console.log(this.name)
-  }
-
 }
 

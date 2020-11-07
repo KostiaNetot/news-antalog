@@ -9,13 +9,9 @@ class News {
     this.id = id;
   }
 
-  setCategories = (...args) => {
-    this.categories = this.categories.concat([...args]);
-  };
+  // setCategories = (...args) => {
+  //   this.categories = this.categories.concat([...args]);
+  // };
 
-  getCategories() {
-    console.log(this.categories);
-    return this.categories;
-  }
 }
 
