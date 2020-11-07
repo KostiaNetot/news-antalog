@@ -1,25 +1,34 @@
 class Storage {
 
-  static getAllNews() {
-    let allNews;
+  static storageInitialization() {
     if (!localStorage.getItem('allNews')) {
       localStorage.setItem('allNews', JSON.stringify(initialNewsData));
-      allNews = JSON.parse(localStorage.getItem('allNews'));
-    } else {
-      allNews = JSON.parse(localStorage.getItem('allNews'));
     }
-    return allNews;
+    if (!localStorage.getItem('allCategories')) {
+      localStorage.setItem('allCategories', JSON.stringify(initialCategoriesData));
+    }
+    if (localStorage.getItem('isAuth') === null) {
+      localStorage.setItem('isAuth', JSON.stringify(false));
+    }
   }
 
-  static findNewsById(id) {
-    return this.getAllNews().filter(news => {
-      return news.id === id;
+  static getData(key) {
+    return  JSON.parse(localStorage.getItem(key));
+  }
+
+  static setData(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  static findItemById(key, id) {
+    return this.getData(key).filter(item => {
+      return item.id === id;
     })[0];
   }
 
-  static isAuthorized() {
-    return !!localStorage.getItem('isAuth');
-  }
+  // static isAuthorized() {
+  //   return !!localStorage.getItem('isAuth');
+  // }
 
   static setAuthorized() {
     localStorage.setItem('isAuth', JSON.stringify(true));

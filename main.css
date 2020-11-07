@@ -5,3 +5,17 @@ main.auth-page {
   justify-content: center;
   align-items: center;
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+li.category-li {
+  padding: 12px 0;
+  border: none;
+}
+
+.categ-wrapper {
+  border-bottom: 1px solid #212529;
+}

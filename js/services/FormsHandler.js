@@ -11,6 +11,7 @@ class FormsHandler {
     } else {
       Storage.setAuthorized();
       authForm.reset();
+      UI.contentInitialization();
     }
   }
 
