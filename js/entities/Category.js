@@ -7,18 +7,13 @@ class Category {
     this.newsList = [];
   }
 
-  addNews(newsId) {
-    this.newsList.push(newsId)
-  }
-
-  removeNews(newsId) {
-    this.newsList = this.newsList.filter(id => id !== newsId);
+  addNewsList(arr) {
+    this.newsList = this.newsList.concat(arr);
   }
 
   getName() {
-    return this.name;
+    console.log(this.name)
   }
 
 }
 
-const categ = new Category('sport');

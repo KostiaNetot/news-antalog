@@ -62,7 +62,7 @@ class UI {
         tagName: 'form',
         name: 'authForm',
         event: 'submit',
-        handler: FormsHandler.handleAuthForm,
+        handler: DataHandler.handleAuthForm,
       });
 
       authForm.innerHTML = `
@@ -90,10 +90,10 @@ class UI {
       allCategories.forEach(({ name, id }) => {
         const categ = this.createElement({
           tagName: 'p',
-          // className: 'btn btn-outline-primary btn-sm m-1',
-          className: 'border border-primary p-1 m-1',
+          className: 'categ-bage border border-primary p-1 m-1',
           dataId: id,
           dataName: name,
+          title: 'edit'
         });
         categ.innerHTML = `${name} <span data-id="${id}" data-name="${name}" class="remove-categ badge badge-light">X</span>`;
         wrapper.append(categ);
@@ -104,29 +104,19 @@ class UI {
 
   static handleCategoriesPanel(e) {
     e.preventDefault();
-    const { tagName, dataset: {name} } = e.target;
+    const { tagName, dataset: {name, id} } = e.target;
 
     if (tagName === 'P') {
       e.target.innerHTML = `
-        <input onblur="console.log('asdasd')" value="${name}" type="text"/>
-        <span class="badge badge-light">save</span>
+        <input data-name="${name}" data-id="${id}" value="${name}" type="text"/>
+        <span class="save-categ badge badge-light">save</span>
       `;
     }
     if (e.target.classList.contains('remove-categ')) {
-      if ( confirm('Remove category?') ) {
-        const { dataset: { id, name } } = e.target;
-        const allCategories = Storage.getData('allCategories').filter(categ => categ.id !== id);
-        const  allNews = Storage.getData('allNews').filter(({ categories }) => {
-          const index = categories.indexOf(name);
-          if (index !== -1) {
-            return  categories.splice(index, 1);
-          }
-        });
-        console.log(allNews);
-        Storage.setData('allCategories', allCategories);
-        Storage.setData('allNews', allNews);
-        UI.contentInitialization();
-      }
+      DataHandler.removeCategory(e.target);
+    }
+    if (e.target.classList.contains('save-categ')) {
+      DataHandler.saveCategory(e.target);
     }
   }
 
@@ -164,6 +154,9 @@ class UI {
 
     if ('className' in options) {
       element.setAttribute('class', options.className);
+    }
+    if ('title' in options) {
+      element.setAttribute('title', options.title);
     }
     if ('name' in options) {
       element.setAttribute('name', options.name);
