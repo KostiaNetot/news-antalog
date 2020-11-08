@@ -1,6 +1,6 @@
 const initialNewsData = [
   {
-    id: '1604590647373',
+    id: 1604590647373,
     title : 'Organic Beef Market - Global Industry Analysis by Size, Share, Growth, Trends and Forecast 2020 – 2026',
     reporter: 'WISEGUY RESEARCH CONSULTANTS PVT LTD',
     date: '2020-11-04',
@@ -10,7 +10,7 @@ const initialNewsData = [
       'Leading industries are utilizing the products to grow their demands and make use of the numerous applications to boost their potential. The report is aimed at the above factors and providing market segmentation to assist in elaborating on actual strength of the international Organic Beef market.',
   },
   {
-    id: '1604590662706',
+    id: 1604590662706,
     title: 'South Australian women changing the world: Winnovation Awards 2020 Finalists announced',
     reporter: 'Newsmaker',
     date: '2020-10-27',
@@ -26,7 +26,7 @@ const initialNewsData = [
       '“We commend all our entrants who contribute to making South Australia a more innovative state. By innovating, every single one of them creates a ripple effect, creating new opportunities for jobs, furthering research, and generally improving our quality of life.”',
   },
   {
-    id: '1604590686552',
+    id: 1604590686552,
     title: 'Australian String Quartet takes up mini residency at Lot Fourteen',
     reporter: 'Australian String Quartet',
     date: '2020-10-18',

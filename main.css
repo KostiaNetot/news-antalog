@@ -11,16 +11,84 @@ form {
   flex-direction: column;
 }
 
+form textarea {
+  resize: none;
+  margin-bottom: 4px;
+}
+
 li.category-li {
   padding: 12px 0;
   border: none;
 }
 
 .categ-wrapper {
+  padding-right: 36px;
   border-bottom: 1px solid #212529;
+  position: relative;
+}
+
+.categ-wrapper .add-categ {
+  position: absolute;
+  top: -32px;
+  right: 0;
+  cursor: pointer;
 }
 
 .categ-bage span {
   cursor: pointer;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.news-list-panel {
+  padding-top: 24px;
+  position: relative;
+}
+
+.news-list-panel .list-group-item {
+  position: relative;
+  padding-bottom: 22px;
+}
+
+.news-list-panel span {
+  cursor: pointer;
+}
+
+.news-list-panel span.edit-news {
+  position: absolute;
+  right: 64px;
+  bottom: 4px;
+}
+
+.news-list-panel span.delete-news {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+}
+
+.news-list-panel .create-news {
+  position: absolute;
+  top: 2px;
+  right: 0;
+}
+
+.popup form {
+  padding: 12px;
+  background-color: white;
+}
+
+.popup form input, .popup form button {
+  margin-bottom: 4px;
 }
 

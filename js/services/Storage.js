@@ -12,8 +12,12 @@ class Storage {
     }
   }
 
-  static getData(key) {
-    return  JSON.parse(localStorage.getItem(key));
+  static getData() {
+    return {
+      allNews: JSON.parse(localStorage.getItem('allNews')),
+      allCategories: JSON.parse(localStorage.getItem('allCategories')),
+      isAuth: JSON.parse(localStorage.getItem('isAuth')),
+    }
   }
 
   static setData(key, data) {
@@ -21,14 +25,10 @@ class Storage {
   }
 
   static findItemById(key, id) {
-    return this.getData(key).filter(item => {
-      return item.id === id;
-    })[0];
+    return JSON.parse(localStorage.getItem(key)).filter(item => {
+        return item.id === id;
+      })[0];
   }
-
-  // static isAuthorized() {
-  //   return !!localStorage.getItem('isAuth');
-  // }
 
   static setAuthorized() {
     localStorage.setItem('isAuth', JSON.stringify(true));
