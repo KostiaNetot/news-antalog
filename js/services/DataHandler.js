@@ -1,9 +1,5 @@
 class DataHandler {
 
-  static test(e) {
-    console.log(e.target);
-  }
-
   static createNewNews(e) {
     e.preventDefault();
     const { allCategories } = Storage.getData();
@@ -40,8 +36,44 @@ class DataHandler {
         break;
 
       case e.submitter.classList.contains('cancel-news'):
-        console.log('cancel-news');
+        UI.removePopup();
         break;
+    }
+  }
+
+  static handleNewsPanel(e) {
+    e.preventDefault();
+    switch (true) {
+      case e.target.classList.contains('delete-news'):
+        DataHandler.removeNews(+e.target.dataset.id);
+        break;
+
+      case e.target.classList.contains('edit-news'):
+        DataHandler.editNews(+e.target.dataset.id);
+        break;
+    }
+  }
+
+  static editNews(id) {
+    console.log('sdfsdfd');
+  }
+
+  static removeNews(id) {
+    const { allNews, allCategories } = Storage.getData();
+    const filteredNews = allNews.filter(news => news.id !== id);
+
+    allCategories.filter(categ => {
+      const index = categ.newsList.indexOf(id);
+      console.log(index);
+      if (index !== -1) {
+        categ.newsList.splice(index, 1);
+      }
+      return categ;
+    });
+    if (confirm('Delete this news?')) {
+      Storage.setData('allNews', filteredNews);
+      Storage.setData('allCategories', allCategories);
+      UI.contentInitialization();
     }
   }
 

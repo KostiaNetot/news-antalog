@@ -104,13 +104,20 @@ class UI {
     const newsList = this.createElement({
       tagName: 'ul',
       className: 'list-group news-list-panel',
+      event: 'click',
+      handler: DataHandler.handleNewsPanel,
     });
     allNews.forEach((news) => {
-      const newsListItem = this.createElement({tagName: 'li', className: 'list-group-item text-truncate'});
+      const newsListItem = this.createElement({
+        tagName: 'li',
+        className: 'list-group-item text-truncate',
+        // event: 'click',
+        // handler: DataHandler.handleNewsPanel,
+      });
       newsListItem.innerHTML = `
         ${news.title} 
-        <span class="badge badge-pill badge-warning edit-news">edit</span> 
-        <span class="badge badge-pill badge-danger delete-news">remove</span>
+        <span data-id="${news.id}" class="badge badge-pill badge-warning edit-news">edit</span> 
+        <span data-id="${news.id}" class="badge badge-pill badge-danger delete-news">remove</span>
       `;
       newsList.append(newsListItem);
     });
@@ -213,10 +220,9 @@ class UI {
     parent.append(listNewsItem);
   }
 
-  //Find checked News in Storage by id:
   static handleNewsLink(e) {
     e.preventDefault();
-    Storage.findItemById('allNews', e.target.dataset.is)
+    // Storage.findItemById('allNews', e.target.dataset.is)
   }
 
   static createElement(options) {
