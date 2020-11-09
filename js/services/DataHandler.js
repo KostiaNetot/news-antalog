@@ -28,9 +28,10 @@ class DataHandler {
             if (!isCategChecked) {
               alert('You should check for at least one category');
             } else {
-              const { allNews } = Storage.getData();
+              const { allNews, allCategories } = Storage.getData();
               const newNews = new News(Date.now(), newsTitle, newsReporter, newsDate, newsText);
               newNews.setCategories(categories);
+              DataHandler.setNewsIdForCheckedCategs(newNews.id, categories, allCategories);
               allNews.push(newNews);
               Storage.setData('allNews', allNews);
               UI.removePopup();
@@ -44,9 +45,16 @@ class DataHandler {
     }
   }
 
-  // static addCategoriesToNewNews(news) {
-  //   console.log(news);
-  // }
+  static setNewsIdForCheckedCategs(newsId, checkedCategs, allCategs) {
+    checkedCategs.forEach((checked) => {
+      allCategs.forEach((categ) => {
+        if (categ.name === checked) {
+          categ.newsList.push(newsId);
+        }
+      });
+    });
+    Storage.setData('allCategories', allCategs);
+  }
 
   static createNewCategory(e) {
     e.preventDefault();

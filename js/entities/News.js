@@ -9,8 +9,8 @@ class News {
     this.id = id;
   }
 
-  setCategories = (...args) => {
-    this.categories = this.categories.concat([...args]);
+  setCategories = (categories) => {
+    this.categories = this.categories.concat(categories);
   };
 
 }
