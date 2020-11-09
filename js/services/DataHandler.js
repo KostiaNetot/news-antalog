@@ -35,6 +35,10 @@ class DataHandler {
           }
         break;
 
+      case e.submitter.classList.contains('save-news'):
+        console.log('save-news');
+        break;
+
       case e.submitter.classList.contains('cancel-news'):
         UI.removePopup();
         break;
@@ -55,7 +59,44 @@ class DataHandler {
   }
 
   static editNews(id) {
-    console.log('sdfsdfd');
+    const news = Storage.findItemById('allNews', id);
+    const { allCategories } = Storage.getData();
+
+    const formElOptions = {
+      id: 'newNewsForm',
+      tagName: 'form',
+      event: 'submit',
+      handler: DataHandler.createNewNews,
+    };
+
+    const checkIsMatch = (categName) => {
+      let isMatch;
+      news.categories.forEach((categ) => {
+        if (categ === categName) {
+          isMatch = true
+        }
+      });
+      return isMatch;
+    };
+
+    const formElInner = `
+      <input type="text" value="${news.title}" name="news-title" placeholder="title">
+      <input type="text" value="${news.reporter}" name="news-reporter" placeholder="reporter">
+      <input type="date" value="${news.date}" name="news-date">
+      <textarea name="news-text" value="${news.text}" cols="30" rows="7">${news.text}</textarea>
+      ${ allCategories.map((categ, i) => {
+      return `<div class="form-check">
+          <input class="form-check-input" ${ checkIsMatch(categ.name) ? 'checked' : '' } value="${categ.name}" data-name="${categ.name}" data-id="${categ.id}" type="checkbox" id="categ-${i+1}">
+          <label class="form-check-label" for="categ-${i+1}">
+            ${categ.name}
+          </label>
+        </div>`
+    }).join('') }
+      <button class="save-news btn btn-success btn-sm">create</button>
+      <button class="cancel-news btn btn-outline-secondary btn-sm">cancel</button>
+    `;
+
+    UI.displayCreationForm(formElOptions, formElInner);
   }
 
   static removeNews(id) {
