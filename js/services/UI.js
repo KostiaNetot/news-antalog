@@ -117,7 +117,7 @@ class UI {
     const formElOptions = {
       id: 'newNewsForm',
       tagName: 'form',
-      event: 'click',
+      event: 'submit',
       handler: DataHandler.createNewNews,
     };
     const formElInner = `
@@ -127,8 +127,8 @@ class UI {
       <textarea name="news-text" cols="30" rows="7" placeholder="news text"></textarea>   
       ${ allCategories.map((categ, i) => {
         return `<div class="form-check">
-          <input class="form-check-input" data-name="${categ.name}" data-id="${categ.id}" type="checkbox" value="" id="categ-${i}">
-          <label class="form-check-label" for="categ-${i}">
+          <input class="form-check-input" value="${categ.name}" data-name="${categ.name}" data-id="${categ.id}" type="checkbox" id="categ-${i+1}">
+          <label class="form-check-label" for="categ-${i+1}">
             ${categ.name}
           </label>
         </div>`
@@ -165,7 +165,8 @@ class UI {
     popup.append(creationForm);
   }
 
-  static removePopup(popup) {
+  static removePopup() {
+    const popup = document.querySelector('.popup');
     popup.innerHTML = '';
     popup.classList.add('d-none');
     this.contentInitialization();

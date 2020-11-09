@@ -10,6 +10,14 @@
 </head>
 <body>
   <div class="container-fluid">
+
+    <div class="form-check">
+      <input class="form-check-input" data-name="${categ.name}" data-id="${categ.id}" type="checkbox" id="categ-${i+1}">
+      <label class="form-check-label" for="categ-${i+1}">
+        ${categ.name}
+      </label>
+    </div>
+
     <div class="row flex-xl-nowrap">
       <div class="col-md-3 col-xl-2 bd-sidebar">
         <h1 class="mt-3">NEWS<br/><small>Antalog</small></h1>

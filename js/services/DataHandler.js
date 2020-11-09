@@ -1,29 +1,56 @@
 class DataHandler {
 
+  static test(e) {
+    console.log(e.target);
+  }
+
   static createNewNews(e) {
     e.preventDefault();
     const { allCategories } = Storage.getData();
-    const newNewsForm = document.querySelector('#newNewsForm');
+    const newNewsForm = e.target;
     const newsTitle = newNewsForm['news-title'].value;
     const newsReporter = newNewsForm['news-reporter'].value;
     const newsDate = newNewsForm['news-date'].value;
     const newsText = newNewsForm['news-text'].value;
-    if (e.target.classList.contains('create-news')) {
-      if (!newsTitle || !newsReporter || !newsDate || !newsText) {
-        alert('All fields should be filled');
-      } else {
-        const newNews = new News(Date.now(), newsTitle, newsReporter, newsDate, newsText);
-      }
+    const checkBoxes = newNewsForm.querySelectorAll('.form-check-input');
+    let isCategChecked = false;
+
+    const categories = Array.from(checkBoxes).filter(box => {
+      if (box.checked) { isCategChecked = true }
+      return box.checked;
+    }).map(box => box.value);
+
+    switch (true) {
+      case e.submitter.classList.contains('create-news'):
+          if (!newsTitle || !newsReporter || !newsDate || !newsText) {
+            alert('All fields should be filled');
+          } else {
+            if (!isCategChecked) {
+              alert('You should check for at least one category');
+            } else {
+              const { allNews } = Storage.getData();
+              const newNews = new News(Date.now(), newsTitle, newsReporter, newsDate, newsText);
+              newNews.setCategories(categories);
+              allNews.push(newNews);
+              Storage.setData('allNews', allNews);
+              UI.removePopup();
+            }
+          }
+        break;
+
+      case e.submitter.classList.contains('cancel-news'):
+        console.log('cancel-news');
+        break;
     }
   }
 
-  static addCategoriesToNewNews(news) {
-    console.log(news);
-  }
+  // static addCategoriesToNewNews(news) {
+  //   console.log(news);
+  // }
 
   static createNewCategory(e) {
     e.preventDefault();
-    const popup = document.querySelector('.popup');
+    // const popup = document.querySelector('.popup');
 
     if (e.target.classList.contains('create-categ') && e.target.previousElementSibling.value) {
       const { value } = e.target.previousElementSibling;
@@ -33,15 +60,15 @@ class DataHandler {
       const isExist = allCategories.find(categ => categ.name === value);
       if (isExist) {
         alert('category already exist');
-        UI.removePopup(popup);
+        UI.removePopup();
       } else {
         allCategories.push(newCategory);
         Storage.setData('allCategories', allCategories);
-        UI.removePopup(popup);
+        UI.removePopup();
       }
     }
     if (e.target.classList.contains('cancel-categ')) {
-      UI.removePopup(popup);
+      UI.removePopup();
     }
   }
 
