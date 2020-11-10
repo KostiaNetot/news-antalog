@@ -4,45 +4,101 @@ class DataHandler {
     e.preventDefault();
     const { allCategories } = Storage.getData();
     const newNewsForm = e.target;
-    const newsTitle = newNewsForm['news-title'].value;
-    const newsReporter = newNewsForm['news-reporter'].value;
-    const newsDate = newNewsForm['news-date'].value;
-    const newsText = newNewsForm['news-text'].value;
-    const checkBoxes = newNewsForm.querySelectorAll('.form-check-input');
+    // const newsTitle = newNewsForm['news-title'].value;
+    // const newsReporter = newNewsForm['news-reporter'].value;
+    // const newsDate = newNewsForm['news-date'].value;
+    // const newsText = newNewsForm['news-text'].value;
+    // const checkBoxes = newNewsForm.querySelectorAll('.form-check-input');
 
     switch (true) {
       case e.submitter.classList.contains('create-news'):
-        let isCategChecked;
-
-        const categories = Array.from(checkBoxes).filter(box => {
-          if (box.checked) { isCategChecked = true }
-          return box.checked;
-        }).map(box => box.value);
-
-        if (!newsTitle || !newsReporter || !newsDate || !newsText) {
-          alert('All fields should be filled');
-        } else {
-          if (!isCategChecked) {
-            alert('You should check for at least one category');
-          } else {
-            const { allNews, allCategories } = Storage.getData();
-            const newNews = new News(Date.now(), newsTitle, newsReporter, newsDate, newsText);
-            newNews.setCategories(categories);
-            DataHandler.setNewsIdForCheckedCategs(newNews.id, categories, allCategories);
-            allNews.push(newNews);
-            Storage.setData('allNews', allNews);
-            UI.removePopup();
-          }
-        }
+        DataHandler.handleNewNewsForm(newNewsForm);
       break;
 
       case e.submitter.classList.contains('save-news'):
-        console.log('save-news');
+        DataHandler.handleEditNewsForm(newNewsForm);
         break;
 
       case e.submitter.classList.contains('cancel-news'):
         UI.removePopup();
         break;
+    }
+  }
+
+  static handleEditNewsForm(form) {
+    const newsId = +form.dataset.id;
+    const newsTitle = form['news-title'].value;
+    const newsReporter = form['news-reporter'].value;
+    const newsDate = form['news-date'].value;
+    const newsText = form['news-text'].value;
+    const checkBoxes = form.querySelectorAll('.form-check-input');
+    let isCategChecked;
+
+    const categories = Array.from(checkBoxes).filter(box => {
+      if (box.checked) { isCategChecked = true }
+      return box.checked;
+    }).map(box => box.value);
+
+    if (!newsTitle || !newsReporter || !newsDate || !newsText) {
+      alert('All fields should be filled');
+    } else {
+      if (!isCategChecked) {
+        alert('You should check for at least one category');
+      } else {
+        const { allCategories } = Storage.getData();
+        const newNews = new News(newsId, newsTitle, newsReporter, newsDate, newsText);
+        newNews.setCategories(categories);
+        const clearedCategs = DataHandler.clearNewsIdFromCategs(newNews.id, allCategories);
+        DataHandler.setNewsIdForCheckedCategs(newNews.id, categories, clearedCategs);
+        DataHandler.replaceNewsById(newNews);
+      }
+    }
+  }
+
+  static replaceNewsById(newNews) {
+    const { allNews } = Storage.getData();
+    const index = allNews.findIndex(news => news.id === newNews.id);
+    allNews.splice(index, 1, newNews);
+    Storage.setData('allNews', allNews);
+  }
+
+  static clearNewsIdFromCategs(newsId, allCategs) {
+    return  allCategs.filter(categ => {
+      const index = categ.newsList.indexOf(newsId);
+      if (index !== -1) {
+        categ.newsList.splice(index, 1);
+      }
+      return categ;
+    });
+  }
+
+  static handleNewNewsForm(form) {
+    const newsTitle = form['news-title'].value;
+    const newsReporter = form['news-reporter'].value;
+    const newsDate = form['news-date'].value;
+    const newsText = form['news-text'].value;
+    const checkBoxes = form.querySelectorAll('.form-check-input');
+    let isCategChecked;
+
+    const categories = Array.from(checkBoxes).filter(box => {
+      if (box.checked) { isCategChecked = true }
+      return box.checked;
+    }).map(box => box.value);
+
+    if (!newsTitle || !newsReporter || !newsDate || !newsText) {
+      alert('All fields should be filled');
+    } else {
+      if (!isCategChecked) {
+        alert('You should check for at least one category');
+      } else {
+        const { allNews, allCategories } = Storage.getData();
+        const newNews = new News(Date.now(), newsTitle, newsReporter, newsDate, newsText);
+        newNews.setCategories(categories);
+        DataHandler.setNewsIdForCheckedCategs(newNews.id, categories, allCategories);
+        allNews.push(newNews);
+        Storage.setData('allNews', allNews);
+        UI.removePopup();
+      }
     }
   }
 
@@ -68,6 +124,7 @@ class DataHandler {
       tagName: 'form',
       event: 'submit',
       handler: DataHandler.createNewNews,
+      dataId: id
     };
 
     const checkIsMatch = (categName) => {
@@ -91,7 +148,7 @@ class DataHandler {
           </label>
         </div>`
     }).join('') }
-      <button class="save-news btn btn-success btn-sm">create</button>
+      <button class="save-news btn btn-success btn-sm">save</button>
       <button class="cancel-news btn btn-outline-secondary btn-sm">cancel</button>
     `;
 
@@ -128,6 +185,9 @@ class DataHandler {
   }
 
   static setNewsIdForCheckedCategs(newsId, checkedCategs, allCategs) {
+    console.log(newsId);
+    console.log(checkedCategs);
+    console.log(allCategs);
     checkedCategs.forEach((checked) => {
       allCategs.forEach((categ) => {
         if (categ.name === checked) {
@@ -212,10 +272,6 @@ class DataHandler {
   static handleCategorySelect(e) {
     window.location.hash = `#category-${e.target.value}`
   }
-
-  // static updateNewsData(name, item = null) {
-  //
-  // }
 
   static handleAuthForm(e) {
     e.preventDefault();
