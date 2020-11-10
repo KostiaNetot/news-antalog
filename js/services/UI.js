@@ -23,6 +23,7 @@ class UI {
   }
 
   static addCategoriesMenu(allCategories, select) {
+    select.addEventListener('change', DataHandler.handleCategorySelect);
     const selectedOption = this.createElement({ tagName: 'option', innerText: 'Categories:' });
     select.append(selectedOption);
 
@@ -32,6 +33,7 @@ class UI {
         value: name,
         innerText: name.charAt(0).toUpperCase() + name.slice(1)
       });
+      // option.innerHTML = `<a href="#category">${name.charAt(0).toUpperCase() + name.slice(1)}</a>`;
       select.append(option);
     });
   }
@@ -288,6 +290,9 @@ class UI {
     }
     if ('event' in options) {
       element.addEventListener(options.event, options.handler);
+    }
+    if ('value' in options) {
+      element.setAttribute('value', options.value);
     }
     return element;
   }

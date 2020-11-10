@@ -116,6 +116,17 @@ class DataHandler {
     }
   }
 
+  static getNewsListByCategory(location, content) {
+    const { allNews } = Storage.getData();
+
+    allNews.forEach(news => {
+      const categIdx = news.categories.indexOf(location);
+      if (categIdx !== -1) {
+        UI.addNewsListOnThePage(news, content);
+      }
+    });
+  }
+
   static setNewsIdForCheckedCategs(newsId, checkedCategs, allCategs) {
     checkedCategs.forEach((checked) => {
       allCategs.forEach((categ) => {
@@ -196,6 +207,10 @@ class DataHandler {
     Storage.setData('allCategories', allCategories);
     Storage.setData('allNews', updatedAllNews);
     UI.contentInitialization();
+  }
+
+  static handleCategorySelect(e) {
+    window.location.hash = `#category-${e.target.value}`
   }
 
   // static updateNewsData(name, item = null) {
