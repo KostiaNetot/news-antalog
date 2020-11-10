@@ -2,21 +2,17 @@ class DataHandler {
 
   static createNewNews(e) {
     e.preventDefault();
-    const { allCategories } = Storage.getData();
     const newNewsForm = e.target;
-    // const newsTitle = newNewsForm['news-title'].value;
-    // const newsReporter = newNewsForm['news-reporter'].value;
-    // const newsDate = newNewsForm['news-date'].value;
-    // const newsText = newNewsForm['news-text'].value;
-    // const checkBoxes = newNewsForm.querySelectorAll('.form-check-input');
 
     switch (true) {
       case e.submitter.classList.contains('create-news'):
-        DataHandler.handleNewNewsForm(newNewsForm);
+        // DataHandler.handleNewNewsForm(newNewsForm);
+        DataHandler.handleNewsForm(newNewsForm);
       break;
 
       case e.submitter.classList.contains('save-news'):
-        DataHandler.handleEditNewsForm(newNewsForm);
+        // DataHandler.handleEditNewsForm(newNewsForm);
+        DataHandler.handleNewsForm(newNewsForm, true);
         break;
 
       case e.submitter.classList.contains('cancel-news'):
@@ -25,7 +21,7 @@ class DataHandler {
     }
   }
 
-  static handleEditNewsForm(form) {
+  static handleNewsForm(form, editing = false) {
     const newsId = +form.dataset.id;
     const newsTitle = form['news-title'].value;
     const newsReporter = form['news-reporter'].value;
@@ -45,12 +41,21 @@ class DataHandler {
       if (!isCategChecked) {
         alert('You should check for at least one category');
       } else {
-        const { allCategories } = Storage.getData();
-        const newNews = new News(newsId, newsTitle, newsReporter, newsDate, newsText);
+        const { allNews, allCategories } = Storage.getData();
+        const newNewsId = editing ? newsId : Date.now();
+        const newNews = new News(newNewsId, newsTitle, newsReporter, newsDate, newsText);
         newNews.setCategories(categories);
-        const clearedCategs = DataHandler.clearNewsIdFromCategs(newNews.id, allCategories);
-        DataHandler.setNewsIdForCheckedCategs(newNews.id, categories, clearedCategs);
-        DataHandler.replaceNewsById(newNews);
+        if (editing) {
+          const clearedCategs = DataHandler.clearNewsIdFromCategs(newNews.id, allCategories);
+          DataHandler.setNewsIdForCheckedCategs(newNews.id, categories, clearedCategs);
+          DataHandler.replaceNewsById(newNews);
+        }
+        if (!editing) {
+          DataHandler.setNewsIdForCheckedCategs(newNews.id, categories, allCategories);
+          allNews.push(newNews);
+          Storage.setData('allNews', allNews);
+        }
+        UI.removePopup();
       }
     }
   }
@@ -70,36 +75,6 @@ class DataHandler {
       }
       return categ;
     });
-  }
-
-  static handleNewNewsForm(form) {
-    const newsTitle = form['news-title'].value;
-    const newsReporter = form['news-reporter'].value;
-    const newsDate = form['news-date'].value;
-    const newsText = form['news-text'].value;
-    const checkBoxes = form.querySelectorAll('.form-check-input');
-    let isCategChecked;
-
-    const categories = Array.from(checkBoxes).filter(box => {
-      if (box.checked) { isCategChecked = true }
-      return box.checked;
-    }).map(box => box.value);
-
-    if (!newsTitle || !newsReporter || !newsDate || !newsText) {
-      alert('All fields should be filled');
-    } else {
-      if (!isCategChecked) {
-        alert('You should check for at least one category');
-      } else {
-        const { allNews, allCategories } = Storage.getData();
-        const newNews = new News(Date.now(), newsTitle, newsReporter, newsDate, newsText);
-        newNews.setCategories(categories);
-        DataHandler.setNewsIdForCheckedCategs(newNews.id, categories, allCategories);
-        allNews.push(newNews);
-        Storage.setData('allNews', allNews);
-        UI.removePopup();
-      }
-    }
   }
 
   static handleNewsPanel(e) {
@@ -185,9 +160,6 @@ class DataHandler {
   }
 
   static setNewsIdForCheckedCategs(newsId, checkedCategs, allCategs) {
-    console.log(newsId);
-    console.log(checkedCategs);
-    console.log(allCategs);
     checkedCategs.forEach((checked) => {
       allCategs.forEach((categ) => {
         if (categ.name === checked) {
@@ -200,7 +172,6 @@ class DataHandler {
 
   static createNewCategory(e) {
     e.preventDefault();
-    // const popup = document.querySelector('.popup');
 
     if (e.target.classList.contains('create-categ') && e.target.previousElementSibling.value) {
       const { value } = e.target.previousElementSibling;
@@ -249,7 +220,6 @@ class DataHandler {
     const editedCategory = new Category(+id, value);
     editedCategory.addNewsList(newsList);
 
-    //replace categ name in news arr:
     const { allNews } = Storage.getData();
     const updatedAllNews = allNews.filter((news) => {
       const index = news.categories.indexOf(name);
@@ -259,7 +229,6 @@ class DataHandler {
       return news;
     });
 
-    //replace categ in categ arr:
     const { allCategories } = Storage.getData();
     const categIdx = allCategories.findIndex(categ => categ.id === +id);
     allCategories.splice(categIdx, 1, editedCategory);

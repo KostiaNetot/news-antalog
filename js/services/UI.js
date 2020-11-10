@@ -113,8 +113,6 @@ class UI {
       const newsListItem = this.createElement({
         tagName: 'li',
         className: 'list-group-item text-truncate',
-        // event: 'click',
-        // handler: DataHandler.handleNewsPanel,
       });
       newsListItem.innerHTML = `
         ${news.title} 
