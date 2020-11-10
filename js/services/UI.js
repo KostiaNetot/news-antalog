@@ -130,7 +130,7 @@ class UI {
     const formElInner = `
       <input type="text" name="news-title" placeholder="title">
       <input type="text" name="news-reporter" placeholder="reporter">
-      <input type="date" value="${new Date().toISOString().split("T")[0]}" name="news-date">
+      <input type="date" value="${new Date().toISOString().split("T")[0]}" name="news-date" max="${new Date().toISOString().split("T")[0]}">
       <textarea name="news-text" cols="30" rows="7" placeholder="news text"></textarea>   
       ${ allCategories.map((categ, i) => {
         return `<div class="form-check">
@@ -220,9 +220,34 @@ class UI {
     parent.append(listNewsItem);
   }
 
+  static addNewsContentOnThePage(location, parent) {
+    const { title, text, reporter, date, categories } = Storage.findItemById('allNews', location);
+    const wrapper = this.createElement({
+      tagName: 'div',
+      className: 'text-justify',
+    });
+
+    wrapper.innerHTML = `
+      <h2>${title}</h2>
+      <p>${text}</p>
+      <div class="d-flex justify-content-between">
+        <small>${reporter}</small>
+        <small>${date}</small>
+      </div>
+      <div class="d-flex mt-2">
+        ${categories.map((categ) => {
+          return `<span class="badge badge-info mr-1">${categ}</span>`    
+        }).join('')}
+      </div>
+    `;
+
+    parent.append(wrapper);
+  }
+
   static handleNewsLink(e) {
     e.preventDefault();
-    // Storage.findItemById('allNews', e.target.dataset.is)
+    const { id } = this.dataset;
+    window.location.hash = `#news-${id}`;
   }
 
   static createElement(options) {

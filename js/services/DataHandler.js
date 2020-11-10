@@ -9,31 +9,32 @@ class DataHandler {
     const newsDate = newNewsForm['news-date'].value;
     const newsText = newNewsForm['news-text'].value;
     const checkBoxes = newNewsForm.querySelectorAll('.form-check-input');
-    let isCategChecked = false;
-
-    const categories = Array.from(checkBoxes).filter(box => {
-      if (box.checked) { isCategChecked = true }
-      return box.checked;
-    }).map(box => box.value);
 
     switch (true) {
       case e.submitter.classList.contains('create-news'):
-          if (!newsTitle || !newsReporter || !newsDate || !newsText) {
-            alert('All fields should be filled');
+        let isCategChecked;
+
+        const categories = Array.from(checkBoxes).filter(box => {
+          if (box.checked) { isCategChecked = true }
+          return box.checked;
+        }).map(box => box.value);
+
+        if (!newsTitle || !newsReporter || !newsDate || !newsText) {
+          alert('All fields should be filled');
+        } else {
+          if (!isCategChecked) {
+            alert('You should check for at least one category');
           } else {
-            if (!isCategChecked) {
-              alert('You should check for at least one category');
-            } else {
-              const { allNews, allCategories } = Storage.getData();
-              const newNews = new News(Date.now(), newsTitle, newsReporter, newsDate, newsText);
-              newNews.setCategories(categories);
-              DataHandler.setNewsIdForCheckedCategs(newNews.id, categories, allCategories);
-              allNews.push(newNews);
-              Storage.setData('allNews', allNews);
-              UI.removePopup();
-            }
+            const { allNews, allCategories } = Storage.getData();
+            const newNews = new News(Date.now(), newsTitle, newsReporter, newsDate, newsText);
+            newNews.setCategories(categories);
+            DataHandler.setNewsIdForCheckedCategs(newNews.id, categories, allCategories);
+            allNews.push(newNews);
+            Storage.setData('allNews', allNews);
+            UI.removePopup();
           }
-        break;
+        }
+      break;
 
       case e.submitter.classList.contains('save-news'):
         console.log('save-news');
@@ -72,9 +73,7 @@ class DataHandler {
     const checkIsMatch = (categName) => {
       let isMatch;
       news.categories.forEach((categ) => {
-        if (categ === categName) {
-          isMatch = true
-        }
+        categ === categName ? isMatch = true : ''
       });
       return isMatch;
     };
@@ -82,7 +81,7 @@ class DataHandler {
     const formElInner = `
       <input type="text" value="${news.title}" name="news-title" placeholder="title">
       <input type="text" value="${news.reporter}" name="news-reporter" placeholder="reporter">
-      <input type="date" value="${news.date}" name="news-date">
+      <input type="date" value="${news.date}" name="news-date" max="${new Date().toISOString().split("T")[0]}">
       <textarea name="news-text" value="${news.text}" cols="30" rows="7">${news.text}</textarea>
       ${ allCategories.map((categ, i) => {
       return `<div class="form-check">
@@ -105,7 +104,6 @@ class DataHandler {
 
     allCategories.filter(categ => {
       const index = categ.newsList.indexOf(id);
-      console.log(index);
       if (index !== -1) {
         categ.newsList.splice(index, 1);
       }
